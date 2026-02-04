@@ -1,0 +1,560 @@
+/* 编辑器区域滚动条 */
+#yaml-editor::-webkit-scrollbar,
+#frequency-editor::-webkit-scrollbar,
+#yaml-backdrop::-webkit-scrollbar,
+#frequency-backdrop::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+#yaml-editor::-webkit-scrollbar-track,
+#frequency-editor::-webkit-scrollbar-track,
+#yaml-backdrop::-webkit-scrollbar-track,
+#frequency-backdrop::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+#yaml-editor::-webkit-scrollbar-thumb,
+#frequency-editor::-webkit-scrollbar-thumb,
+#yaml-backdrop::-webkit-scrollbar-thumb,
+#frequency-backdrop::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 0;
+}
+#yaml-editor::-webkit-scrollbar-thumb:hover,
+#frequency-editor::-webkit-scrollbar-thumb:hover,
+#yaml-backdrop::-webkit-scrollbar-thumb:hover,
+#frequency-backdrop::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
+}
+
+/* 高亮编辑器容器 */
+.highlight-editor-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* 高亮背景层 */
+.highlight-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    margin: 0;
+    border: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+    line-height: 1.625;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: auto;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 透明输入层 */
+.highlight-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    margin: 0;
+    border: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+    line-height: 1.625;
+    overflow: auto;
+    background: transparent;
+    color: transparent;
+    caret-color: #d4d4d4;
+    resize: none;
+    outline: none;
+    z-index: 2;
+}
+
+/* 注释样式 - 灰色 */
+.syntax-comment {
+    color: #6a9955;
+}
+
+/* 右侧面板滚动条 */
+#modules-container::-webkit-scrollbar {
+    width: 8px;
+}
+#modules-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+#modules-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* 模块卡片样式 */
+.module-card {
+    background: white;
+    border-radius: 0.5rem; /* rounded-lg */
+    border: 1px solid #e5e7eb; /* border-gray-200 */
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+/* 激活态（可编辑） */
+.module-card.active {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.module-card.active:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: #bfdbfe; /* blue-200 */
+}
+.module-card.active .module-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111827;
+}
+
+/* 禁用态（灰色/只读） */
+.module-card.disabled {
+    background-color: #f9fafb; /* gray-50 */
+    opacity: 0.8;
+}
+.module-card.disabled .module-header {
+    background-color: #f3f4f6; /* gray-100 */
+    color: #6b7280; /* gray-500 */
+    cursor: not-allowed;
+}
+.module-card.disabled .module-body {
+    display: none;
+}
+.module-card.disabled .locked-badge {
+    display: inline-flex;
+}
+
+/* 输入控件统一 */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select {
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    border-width: 1px;
+    border-color: #d1d5db; /* gray-300 */
+    width: 100%;
+    outline: 2px solid transparent;
+    transition: all 0.15s;
+}
+input:focus, select:focus {
+    border-color: #3b82f6; /* blue-500 */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* 开关样式 (Checkbox Toggle) */
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: #3b82f6;
+}
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #3b82f6;
+}
+
+/* 列表样式 (Platforms & RSS & Sortable) */
+.sortable-list-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+}
+.sortable-list-item:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+.sortable-handle {
+    cursor: grab;
+    color: #94a3b8;
+}
+.sortable-handle:hover {
+    color: #64748b;
+}
+.sortable-ghost {
+    background: #e2e8f0;
+    opacity: 0.5;
+}
+
+/* 禁用状态的勾选框 */
+input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Tab 切换样式 */
+.tab-button {
+    transition: all 0.2s;
+}
+.tab-button.active {
+    color: #d4d4d4;
+    border-color: #3b82f6;
+}
+.tab-content.hidden {
+    display: none;
+}
+
+/* 标签输入样式 */
+.tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background: white;
+    min-height: 42px;
+}
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+.tag-item button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1;
+}
+.tag-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    min-width: 120px;
+    font-size: 0.875rem;
+}
+
+/* 词组卡片样式 */
+.word-group-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+.word-group-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 插入区域样式 */
+.insert-zone {
+    position: relative;
+    height: 8px;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.insert-zone:hover {
+    height: 32px;
+}
+
+.insert-button {
+    opacity: 0;
+    visibility: hidden;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.insert-zone:hover .insert-button {
+    opacity: 1;
+    visibility: visible;
+}
+
+.insert-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.insert-button:active {
+    transform: scale(0.95);
+}
+
+/* 编辑区域恢复默认鼠标样式 */
+.word-group-card .editable-area {
+    cursor: default;
+}
+.word-group-card .editable-area input {
+    cursor: text;
+}
+.word-group-card .editable-area button {
+    cursor: pointer;
+}
+.word-group-card .editable-area .tag-item {
+    cursor: pointer;
+}
+
+/* 拖拽手柄样式 */
+.drag-handle {
+    cursor: grab;
+    transition: all 0.2s;
+}
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* SortableJS 拖拽样式 */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #dbeafe;
+    border: 2px dashed #3b82f6;
+}
+.sortable-chosen {
+    background: #f0f9ff;
+    border-color: #3b82f6;
+}
+.sortable-drag {
+    opacity: 0.8;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transform: rotate(2deg);
+}
+
+/* 独立区域复选框组 */
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+.checkbox-card {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.checkbox-card:hover {
+    border-color: #93c5fd;
+    background-color: #eff6ff;
+}
+.checkbox-card input:checked + span {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+/* ==========================================
+   拖拽上传遮罩层
+   ========================================== */
+.drop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(59, 130, 246, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: all;
+}
+.drop-overlay.hidden {
+    display: none;
+}
+.drop-overlay-content {
+    text-align: center;
+    color: white;
+}
+.drop-overlay-content i {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    animation: bounce 1s infinite;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ==========================================
+   Toast 提示
+   ========================================== */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-notification i {
+    font-size: 1.125rem;
+}
+
+/* Toast 类型样式 */
+.toast-success {
+    background: #10b981;
+    color: white;
+}
+.toast-error {
+    background: #ef4444;
+    color: white;
+}
+.toast-info {
+    background: #3b82f6;
+    color: white;
+}
+.toast-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+/* ==========================================
+   弹窗样式
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-overlay.hidden {
+    display: none;
+}
+.modal-content {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    max-width: 450px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+
+/* 弹簧跳动动画 */
+@keyframes spring-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); }
+    80% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.support-modal-content {
+    animation: spring-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: #ffffff;
+    border: none;
+    border-radius: 1.5rem;
+}
+
+/* 柔软卡片设计 */
+.support-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    background: #fdfdfd;
+    border: 1px solid #f3f4f6;
+    border-radius: 1.25rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.support-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    border-color: #e5e7eb;
+}
+
+.support-card-num {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #f3f4f6;
+    font-style: italic;
+    transition: color 0.3s;
+}
+
+.support-card:hover .support-card-num {
+    color: #e5e7eb;
+}
+
+.support-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.support-card:hover .support-icon {
+    transform: rotate(12deg) scale(1.1);
+}
+
+.support-btn {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    transition: all 0.3s;
+}
