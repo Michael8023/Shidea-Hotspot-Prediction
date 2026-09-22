@@ -1,0 +1,28 @@
+# API key 不写入此文件；通过环境变量 TYPESAFE_API_KEY 提供。
+creator_profile:
+  niche: "AI、科技与创业"
+  audience: "关注 AI 产品、技术趋势和商业机会的中文创作者与从业者"
+  voice: "理性、清晰、有独立判断，避免标题党"
+  target_audiences:
+    大众用户: "与日常生活、消费或广泛社会讨论直接相关"
+    科技爱好者: "与产品、互联网、AI 或数码趋势相关"
+    开发者: "与工程、开源、模型、工具或技术实现相关"
+    创业与商业: "与公司、融资、市场、商业模式或行业竞争相关"
+  recommended_angles:
+    快讯解释: "快速讲清楚发生了什么以及为什么重要"
+    产品或技术解读: "解释产品、技术、功能或使用价值"
+    对比评测: "与已有产品、方案或历史事件进行比较"
+    影响与观点: "讨论对行业、用户或商业的影响"
+    暂不跟进: "信息价值或内容空间不足，不建议立即制作"
+# 仅把动量最高的候选事件送进 Jev，控制 API 调用量。
+pre_filter_limit: 30
+weights:
+  momentum: 0.30
+  creator_fit: 0.20
+  relevance: 0.15
+  novelty: 0.15
+  contentability: 0.10
+  differentiation: 0.10
+  risk: 0.10
+jev:
+  timeout_seconds: 20

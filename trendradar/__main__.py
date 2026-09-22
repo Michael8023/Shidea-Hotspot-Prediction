@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
 import requests
+from dotenv import load_dotenv
 
 from trendradar.context import AppContext
 from trendradar import __version__
@@ -1652,6 +1653,7 @@ class NewsAnalyzer:
 
 def main():
     """主程序入口"""
+    load_dotenv()
     # 解析命令行参数
     parser = argparse.ArgumentParser(
         description="TrendRadar - 热点新闻聚合与分析工具",

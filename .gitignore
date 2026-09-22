@@ -1,0 +1,13 @@
+# Local secrets
+.env
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Locally generated reports and collection caches
+output/html/
+output/index.html
+output/jev-radar/
+output/news/2026-*.db
+output/rss/
