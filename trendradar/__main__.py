@@ -11,7 +11,7 @@ import os
 import re
 import webbrowser
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 import requests
 from dotenv import load_dotenv
@@ -23,7 +23,6 @@ from trendradar.core.analyzer import convert_keyword_stats_to_platform_stats
 from trendradar.crawler import DataFetcher
 from trendradar.storage import convert_crawl_results_to_news_data
 from trendradar.utils.time import DEFAULT_TIMEZONE, is_within_days, calculate_days_old
-from trendradar.ai import AIAnalyzer, AIAnalysisResult
 
 
 def _parse_version(version_str: str) -> Tuple[int, int, int]:
@@ -137,8 +136,6 @@ def check_all_versions(
     config_files = [
         Path("config/config.yaml"),
         Path("config/frequency_words.txt"),
-        Path("config/ai_analysis_prompt.txt"),
-        Path("config/ai_translation_prompt.txt"),
     ]
 
     version_pattern = re.compile(r"Version:\s*(\d+\.\d+\.\d+)", re.IGNORECASE)
@@ -453,7 +450,7 @@ class NewsAnalyzer:
         report_type: str,
         id_to_name: Optional[Dict],
         current_results: Optional[Dict] = None,
-    ) -> Optional[AIAnalysisResult]:
+    ) -> Optional[Any]:
         """执行 AI 分析"""
         analysis_config = self.ctx.config.get("AI_ANALYSIS", {})
         if not analysis_config.get("ENABLED", False):
@@ -798,7 +795,7 @@ class NewsAnalyzer:
         rss_items: Optional[List[Dict]] = None,
         rss_new_items: Optional[List[Dict]] = None,
         standalone_data: Optional[Dict] = None,
-    ) -> Tuple[List[Dict], Optional[str], Optional[AIAnalysisResult]]:
+    ) -> Tuple[List[Dict], Optional[str], Optional[Any]]:
         """统一的分析流水线：数据处理 → 统计计算 → AI分析 → HTML生成"""
 
         # 统计计算（使用 AppContext）
@@ -822,16 +819,8 @@ class NewsAnalyzer:
                 self.ctx.rank_threshold,
             )
 
-        # AI 分析（如果启用，用于 HTML 报告）
+        # Shidea deliberately keeps collection and Jev judging separate from LLM generation.
         ai_result = None
-        ai_config = self.ctx.config.get("AI_ANALYSIS", {})
-        if ai_config.get("ENABLED", False) and stats:
-            # 获取模式策略来确定报告类型
-            mode_strategy = self._get_mode_strategy()
-            report_type = mode_strategy["report_type"]
-            ai_result = self._run_ai_analysis(
-                stats, rss_items, mode, report_type, id_to_name, current_results=data_source
-            )
 
         # HTML生成（如果启用）
         html_file = None
@@ -864,7 +853,7 @@ class NewsAnalyzer:
         rss_items: Optional[List[Dict]] = None,
         rss_new_items: Optional[List[Dict]] = None,
         standalone_data: Optional[Dict] = None,
-        ai_result: Optional[AIAnalysisResult] = None,
+        ai_result: Optional[Any] = None,
         current_results: Optional[Dict] = None,
     ) -> bool:
         """统一的通知发送逻辑，包含所有判断条件，支持热榜+RSS合并推送+AI分析+独立展示区"""
@@ -915,13 +904,8 @@ class NewsAnalyzer:
                     else:
                         print(f"推送窗口控制：今天首次推送")
 
-            # AI 分析：优先使用传入的结果，避免重复分析
-            if ai_result is None:
-                ai_config = cfg.get("AI_ANALYSIS", {})
-                if ai_config.get("ENABLED", False):
-                    ai_result = self._run_ai_analysis(
-                        stats, rss_items, mode, report_type, id_to_name, current_results=current_results
-                    )
+            # The notification path intentionally carries no traditional LLM analysis.
+            ai_result = None
 
             # 准备报告数据
             report_data = self.ctx.prepare_report(stats, failed_ids, new_titles, id_to_name, mode)

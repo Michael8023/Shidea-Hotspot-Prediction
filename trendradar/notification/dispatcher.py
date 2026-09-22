@@ -38,11 +38,6 @@ from .renderer import (
     render_rss_markdown_content,
 )
 
-# 类型检查时导入，运行时不导入（避免循环导入）
-if TYPE_CHECKING:
-    from trendradar.ai import AIAnalysisResult, AITranslator
-
-
 class NotificationDispatcher:
     """
     统一的多账号通知调度器

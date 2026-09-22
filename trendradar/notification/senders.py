@@ -34,16 +34,8 @@ from .formatters import convert_markdown_to_mrkdwn, strip_markdown
 
 
 def _render_ai_analysis(ai_analysis: Any, channel: str) -> str:
-    """渲染 AI 分析内容为指定渠道格式"""
-    if not ai_analysis:
-        return ""
-
-    try:
-        from trendradar.ai.formatter import get_ai_analysis_renderer
-        renderer = get_ai_analysis_renderer(channel)
-        return renderer(ai_analysis)
-    except ImportError:
-        return ""
+    """Traditional LLM analysis has been removed from Shidea notifications."""
+    return ""
 
 
 # === SMTP 邮件配置 ===

@@ -10,5 +10,6 @@ __pycache__/
 output/html/
 output/index.html
 output/jev-radar/
+output/benchmarks/
 output/news/2026-*.db
 output/rss/

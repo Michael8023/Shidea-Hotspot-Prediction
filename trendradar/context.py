@@ -38,7 +38,6 @@ from trendradar.notification import (
     NotificationDispatcher,
     PushRecordManager,
 )
-from trendradar.ai import AITranslator
 from trendradar.storage import get_storage_manager
 
 
@@ -444,18 +443,11 @@ class AppContext:
 
     def create_notification_dispatcher(self) -> NotificationDispatcher:
         """创建通知调度器"""
-        # 创建翻译器（如果启用）
-        translator = None
-        trans_config = self.config.get("AI_TRANSLATION", {})
-        if trans_config.get("ENABLED", False):
-            ai_config = self.config.get("AI", {})
-            translator = AITranslator(trans_config, ai_config)
-
         return NotificationDispatcher(
             config=self.config,
             get_time_func=self.get_time,
             split_content_func=self.split_content,
-            translator=translator,
+            translator=None,
         )
 
     def create_push_manager(self) -> PushRecordManager:

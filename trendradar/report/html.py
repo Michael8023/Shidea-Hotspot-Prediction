@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Optional, Callable
 
 from trendradar.report.helpers import html_escape
 from trendradar.utils.time import convert_time_for_display
-from trendradar.ai.formatter import render_ai_analysis_html_rich
 
 
 def render_html_content(
@@ -1317,8 +1316,8 @@ def render_html_content(
     # 生成独立展示区 HTML
     standalone_html = render_standalone_html(standalone_data)
 
-    # 生成 AI 分析 HTML
-    ai_html = render_ai_analysis_html_rich(ai_analysis) if ai_analysis else ""
+    # Traditional LLM analysis is intentionally not part of Shidea reports.
+    ai_html = ""
 
     # 准备各区域内容映射
     region_contents = {
