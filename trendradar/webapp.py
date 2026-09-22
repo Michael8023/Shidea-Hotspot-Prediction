@@ -92,7 +92,8 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             })
             return
         if path == "/api/opportunities":
-            self._json({"items": _latest_report()})
+            profile = _read_radar_config().get("creator_profile", {})
+            self._json({"items": _latest_report(), "audiences": list((profile.get("target_audiences") or {}).keys())})
             return
         if path == "/api/job":
             with _job_lock:

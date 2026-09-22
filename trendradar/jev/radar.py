@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional
 
 from .client import JevClient, normalized_score
-from .questions import build_questions
+from .questions import build_questions, target_audiences_for
 
 _PUNCTUATION = re.compile(r"[\s\W_]+", re.UNICODE)
 
@@ -127,10 +127,14 @@ class OpportunityRadar:
                 except Exception as exc:
                     error = str(exc)
             signals = {key: normalized_score(answers.get(key)) for key in ("creator_fit", "relevance", "novelty", "contentability", "differentiation", "risk")}
+            audience_scores = {
+                name: normalized_score(answers.get(f"audience_fit_{index}"))
+                for index, name in enumerate(target_audiences_for(self.profile).keys())
+            }
             semantic_ready = all(value is not None for value in signals.values())
             if semantic_ready:
                 score = (self.weights["momentum"] * observed_momentum + self.weights["creator_fit"] * signals["creator_fit"] + self.weights["relevance"] * signals["relevance"] + self.weights["novelty"] * signals["novelty"] + self.weights["contentability"] * signals["contentability"] + self.weights["differentiation"] * signals["differentiation"] - self.weights["risk"] * signals["risk"])
             else:
                 score = observed_momentum
-            results.append({"title": cluster.title, "platforms": cluster.platforms, "observations": len(cluster.items), "momentum": round(observed_momentum, 4), "opportunity_score": round(max(0.0, min(1.0, score)) * 100, 1), "status": "jev_scored" if semantic_ready else "momentum_prescreen", "signals": signals, "audience": answers.get("audience", {}).get("choice"), "recommended_angle": answers.get("recommended_angle", {}).get("choice"), "fact_check_needed": answers.get("fact_check_needed", {}).get("noul"), "source_items": [item.__dict__ for item in cluster.items], "error": error})
+            results.append({"title": cluster.title, "platforms": cluster.platforms, "observations": len(cluster.items), "momentum": round(observed_momentum, 4), "opportunity_score": round(max(0.0, min(1.0, score)) * 100, 1), "status": "jev_scored" if semantic_ready else "momentum_prescreen", "signals": signals, "audience": answers.get("audience", {}).get("choice"), "audience_scores": {name: round(value * 100, 1) if value is not None else None for name, value in audience_scores.items()}, "recommended_angle": answers.get("recommended_angle", {}).get("choice"), "fact_check_needed": answers.get("fact_check_needed", {}).get("noul"), "source_items": [item.__dict__ for item in cluster.items], "error": error})
         return sorted(results, key=lambda result: result["opportunity_score"], reverse=True)

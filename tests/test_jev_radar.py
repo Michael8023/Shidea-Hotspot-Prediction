@@ -28,6 +28,8 @@ class JevRadarTests(unittest.TestCase):
         })
         self.assertEqual(questions["audience"]["criteria"], {"产品经理": "关注产品机会"})
         self.assertEqual(questions["recommended_angle"]["criteria"], {"案例拆解": "拆解实践案例"})
+        self.assertIn("audience_fit_0", questions)
+        self.assertEqual(questions["audience_fit_0"]["type"], "score")
 
 
 if __name__ == "__main__":
